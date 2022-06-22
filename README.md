@@ -1,5 +1,4 @@
-# blender-twisted-wire-pair
-* make audio captions quickly
+# blender-twisted-wire
 * options for cap type, vertical segments, cylinder segments, turns, wires, wire radius, length of wires, gap (distance from wire to center of rotation), object name and ability to boolean union objects
 
 ### Installation:
