@@ -1,6 +1,6 @@
 import bpy
 
-class Twisted_Pair_Settings(bpy.types.PropertyGroup):
+class Twisted_Wire_Settings(bpy.types.PropertyGroup):
 
     cap_fill : bpy.props.EnumProperty(
                 name = "Cap Fill Type",
@@ -31,6 +31,14 @@ class Twisted_Pair_Settings(bpy.types.PropertyGroup):
         min=1, max=1000,
     )
 
+    wires : bpy.props.IntProperty(
+        name="Wires",
+        description="Wires",
+        default=2,
+        min=1, max=1000,
+    )
+
+
     radius : bpy.props.FloatProperty(
         name="Diameter",
         description="Radius of wire",
@@ -48,51 +56,62 @@ class Twisted_Pair_Settings(bpy.types.PropertyGroup):
     length : bpy.props.FloatProperty(
         name="Length",
         description="Length of Wire Pair",
-        default=0.0,
+        default=100.0,
         min=0.1, max=1000.0,
     )
 
-class TwistedPair_PT(bpy.types.Panel):
+    union: bpy.props.BoolProperty(
+        name="Union Option",
+        default=False
+        )
+
+    name: bpy.props.StringProperty(
+        name="Wire Name",
+        default="Twisted Wire"
+    )
+
+class TwistedWire_PT(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_label = 'Twisted Wire Pair'
+    bl_label = 'Twisted Wire'
     bl_context = 'objectmode'
-    bl_category = 'Twisted Wire Pair'
-    bl_idname  = 'VIEW_3D_PT_twisted_pair'
+    bl_category = 'Twisted Wire'
+    bl_idname  = 'VIEW_3D_PT_twisted_wire'
 
 
     def draw(self, context):
         layout = self.layout
-        scene = context.scene.twisted_pair
+        scene = context.scene.twisted_wire
 
         col = layout.column(align=True)
-        col.use_property_split = True
         col.prop(scene, 'cap_fill', text='Cap Fill Type')
 
         col = layout.column(align=True)
-        col.use_property_split = True
         col.prop(scene, 'vert_segs', text='Vertical Segments')
 
         col = layout.column(align=True)
-        col.use_property_split = True
         col.prop(scene, 'cyl_segs', text='Cylinder Segments')
         
         col = layout.column(align=True)
-        col.use_property_split = True
         col.prop(scene, 'turns', text='Turns')
+        
+        col = layout.column(align=True)
+        col.prop(scene, 'wires', text='Wires')
 
         col = layout.column(align=True)
-        col.use_property_split = True
         col.prop(scene, 'radius', text='Wire Radius')
 
         col = layout.column(align=True)
-        col.use_property_split = True
         col.prop(scene, 'length', text='Length')
 
         col = layout.column(align=True)
-        col.use_property_split = True
         col.prop(scene, 'gap', text='Gap')
 
         col = layout.column(align=True)
-        col.use_property_split = True
-        col.operator('twisted_pair.create_pair', text = 'Create', icon='ADD')
+        col.prop(scene, 'union', text='Union Wires')
+
+        col = layout.column(align=True)
+        col.prop(scene, 'name', text='Name')
+
+        col = layout.column(align=True)
+        col.operator('twisted_wire.create_wire', text = 'Create', icon='ADD')

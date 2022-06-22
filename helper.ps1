@@ -1,8 +1,8 @@
-$Src = "Twisted Wire Pair"
-$Zipped = "Twisted Wire Pair.zip"
-$Addon = "C:\Users\marco\AppData\Roaming\Blender Foundation\Blender\3.1\scripts\addons\Twisted Wire Pair"
+$Src = "Twisted Wire"
+$Zipped = "Twisted Wire.zip"
+$Addon = "C:\Users\marco\AppData\Roaming\Blender Foundation\Blender\3.1\scripts\addons\Twisted Wire"
 
-Set-Location -Path "C:\Users\marco\blender-twisted-wire-pair"
+Set-Location -Path "C:\Users\marco\blender-twisted-wire"
 
 if (Test-Path $Zipped) 
 {
