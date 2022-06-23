@@ -1,5 +1,5 @@
 # blender-twisted-wire
-* options for cap type, vertical segments, cylinder segments, turns, wires, wire radius, length of wires, gap (distance from wire to center of rotation), object name and ability to boolean union objects
+* options for cap type, vertical segments, cylinder segments, turns, wires, wire radius, length of wires, gap (distance from wire to center of rotation), object name and ability to join or boolean union wires
 
 ### Installation:
 * To install zip the directory "Twisted Wire" and install the addon via preferences menu

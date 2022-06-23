@@ -60,10 +60,13 @@ class Twisted_Wire_Settings(bpy.types.PropertyGroup):
         min=0.1, max=1000.0,
     )
 
-    union: bpy.props.BoolProperty(
-        name="Union Option",
-        default=False
-        )
+    union : bpy.props.EnumProperty(
+                name = "Join method",
+                description = "Join method",
+                items= [('0', 'Unjoined', ''),
+                        ('1', 'Joined', ''),
+                        ('2', 'Boolean union', '')]
+    )
 
     name: bpy.props.StringProperty(
         name="Wire Name",
@@ -108,7 +111,7 @@ class TwistedWire_PT(bpy.types.Panel):
         col.prop(scene, 'gap', text='Gap')
 
         col = layout.column(align=True)
-        col.prop(scene, 'union', text='Union Wires')
+        col.prop(scene, 'union', text='Join Wires')
 
         col = layout.column(align=True)
         col.prop(scene, 'name', text='Name')

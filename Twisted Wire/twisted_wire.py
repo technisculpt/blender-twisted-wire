@@ -44,7 +44,6 @@ def create_wire(cap_fill, vert_segs, cyl_segs, turns, radius, length, gap, name,
     wire = []
 
     for i in range(int(segs)+1): # gather vertices
-
         x_pos = mag * math.cos(theta)
         y_pos = mag * math.sin(theta)
 
@@ -65,13 +64,10 @@ def create_wire(cap_fill, vert_segs, cyl_segs, turns, radius, length, gap, name,
 
     # tesselate
     if hasattr(bm.verts, "ensure_lookup_table"):
-
         bm.verts.ensure_lookup_table()
 
         if cap_fill == '0':
-
             for v in range(cyl_segs): # bottom cap
-
                 if v == (cyl_segs - 1):
                     bm.faces.new((  bm.verts[1],
                                     bm.verts[v + 1],
@@ -95,7 +91,6 @@ def create_wire(cap_fill, vert_segs, cyl_segs, turns, radius, length, gap, name,
                                     bm.verts[wire_vert_count + v + 1]))
 
         elif cap_fill == '1': # cap is N-gon
-
             tmp_verts = [] # bottom cap
             for vert in range(cyl_segs, 0, -1):
                 tmp_verts.append(bm.verts[vert])
@@ -105,8 +100,9 @@ def create_wire(cap_fill, vert_segs, cyl_segs, turns, radius, length, gap, name,
             start_v = end_v - cyl_segs
             bm.faces.new(bm.verts[start_v : end_v])
 
-        for i in range(int(segs)): # first wire
+        for i in range(int(segs)): # spiral faces
             offset = i * cyl_segs
+
             if cap_fill == '0':
                 offset += 1
 
@@ -135,7 +131,14 @@ def twisted_wire_set(cap_fill, vert_segs, cyl_segs, turns, wires, radius, length
         theta_start += angle_delta
         b_objs.append(create_wire(cap_fill, vert_segs, cyl_segs, turns, radius, length, gap, name, theta_start))
 
-    if union:
+    if union == '1': # blender object join
+        bpy.context.view_layer.objects.active = b_objs[0]
+        bpy.ops.object.select_all(action="DESELECT")
+        for b_obj in b_objs:
+            b_obj.select_set(True)
+        bpy.ops.object.join()
+
+    elif union == '2': # boolean union join
         for index, b_obj in enumerate(b_objs):
             if index:
                 boolean_union(b_objs[0], b_obj)
