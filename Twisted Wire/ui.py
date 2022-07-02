@@ -1,5 +1,24 @@
 import bpy
 
+global wire_rads
+wire_rads = 0
+
+def update_wires(self, context):
+    global wire_rads
+
+    if context.scene.twisted_wire.wires != wire_rads:
+        wire_rads = context.scene.twisted_wire.wires
+        _custom = context.scene.custom_group
+        _custom.clear()
+        for wire_obj in range(wire_rads):
+            item = _custom.add()
+            item.name = f"Wire {wire_obj}"
+            item.radius =  context.scene.twisted_wire.radius
+
+class PropertyCollection(bpy.types.PropertyGroup):
+    name: bpy.props.StringProperty(name="", default="")
+    radius: bpy.props.FloatProperty(name="",  default=0.0, min=0.1, max=1000.0,)
+
 class Twisted_Wire_Settings(bpy.types.PropertyGroup):
 
     cap_fill : bpy.props.EnumProperty(
@@ -35,7 +54,8 @@ class Twisted_Wire_Settings(bpy.types.PropertyGroup):
         name="Wires",
         description="Wires",
         default=2,
-        min=1, max=1000,
+        min=1, max=100,
+        update=update_wires
     )
 
 
@@ -81,40 +101,45 @@ class TwistedWire_PT(bpy.types.Panel):
     bl_category = 'Twisted Wire'
     bl_idname  = 'VIEW_3D_PT_twisted_wire'
 
-
     def draw(self, context):
+        global wire_rads
         layout = self.layout
-        scene = context.scene.twisted_wire
+        _scene = context.scene.twisted_wire
+        _custom = context.scene.custom_group
 
         col = layout.column(align=True)
-        col.prop(scene, 'cap_fill', text='Cap Fill Type')
+        col.prop(_scene, 'cap_fill', text='Cap Fill Type')
 
         col = layout.column(align=True)
-        col.prop(scene, 'vert_segs', text='Vertical Segments')
+        col.prop(_scene, 'vert_segs', text='Vertical Segments')
 
         col = layout.column(align=True)
-        col.prop(scene, 'cyl_segs', text='Cylinder Segments')
+        col.prop(_scene, 'cyl_segs', text='Cylinder Segments')
         
         col = layout.column(align=True)
-        col.prop(scene, 'turns', text='Turns')
+        col.prop(_scene, 'turns', text='Turns')
         
         col = layout.column(align=True)
-        col.prop(scene, 'wires', text='Wires')
+        col.prop(_scene, 'wires', text='Wires')
 
         col = layout.column(align=True)
-        col.prop(scene, 'radius', text='Wire Radius')
+        col.prop(_scene, 'radius', text='Wire Radius')
 
         col = layout.column(align=True)
-        col.prop(scene, 'length', text='Length')
+        col.prop(_scene, 'length', text='Length')
 
         col = layout.column(align=True)
-        col.prop(scene, 'gap', text='Gap')
+        col.prop(_scene, 'gap', text='Gap')
 
         col = layout.column(align=True)
-        col.prop(scene, 'union', text='Join Wires')
+        col.prop(_scene, 'union', text='Join Wires')
 
         col = layout.column(align=True)
-        col.prop(scene, 'name', text='Name')
+        col.prop(_scene, 'name', text='Name')
 
         col = layout.column(align=True)
         col.operator('twisted_wire.create_wire', text = 'Create', icon='ADD')
+
+        for item in _custom:
+            col = layout.column(align=True)
+            col.prop(item, "radius", text=f"Wire Radius {item.name}")

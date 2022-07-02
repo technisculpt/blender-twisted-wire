@@ -122,14 +122,14 @@ def create_wire(cap_fill, vert_segs, cyl_segs, turns, radius, length, gap, name,
         bm.free()
         return(blender_obj)
 
-def twisted_wire_set(cap_fill, vert_segs, cyl_segs, turns, wires, radius, length, gap, union, name):
+def twisted_wire_set(cap_fill, vert_segs, cyl_segs, turns, wires, radii, length, gap, union, name):
     angle_delta = (2 * math.pi)/wires
     theta_start = 0
     b_objs = []
 
     for wire in range(wires):
         theta_start += angle_delta
-        b_objs.append(create_wire(cap_fill, vert_segs, cyl_segs, turns, radius, length, gap, name, theta_start))
+        b_objs.append(create_wire(cap_fill, vert_segs, cyl_segs, turns, radii[wire], length, gap, name, theta_start))
 
     if union == '1': # blender object join
         bpy.context.view_layer.objects.active = b_objs[0]
@@ -152,8 +152,9 @@ class Twisted_Wire(bpy.types.Operator):
     def execute(self, context):
 
         c = context.scene.twisted_wire
+        radii = [obj.radius for obj in context.scene.custom_group]
         twisted_wire_set(   c.cap_fill, c.vert_segs, c.cyl_segs, c.turns,
-                            c.wires, c.radius, c.length, c.gap, c.union, c.name)
+                            c.wires, radii, c.length, c.gap, c.union, c.name)
 
         self.report({'INFO'}, "FINISHED")
         return {'FINISHED'}

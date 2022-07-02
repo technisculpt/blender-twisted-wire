@@ -23,6 +23,7 @@ classes = (
     twisted_wire.Twisted_Wire,
     ui.Twisted_Wire_Settings,
     ui.TwistedWire_PT,
+    ui.PropertyCollection,
 )
 
 
@@ -31,12 +32,14 @@ def register():
         bpy.utils.register_class(cls)
 
     bpy.types.Scene.twisted_wire = bpy.props.PointerProperty(type=ui.Twisted_Wire_Settings)
+    bpy.types.Scene.custom_group = bpy.props.CollectionProperty(type=ui.PropertyCollection)
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
 
     del bpy.types.Scene.twisted_wire
+    del bpy.types.Scene.custom_group
 
 if __name__ == '__main__':
     register()
