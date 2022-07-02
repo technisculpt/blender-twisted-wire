@@ -1,19 +1,19 @@
 import bpy
-
-global wire_rads
-wire_rads = 0
+from bpy.app.handlers import persistent
 
 def update_wires(self, context):
-    global wire_rads
+    wire_rads = context.scene.twisted_wire.wires
+    _custom = context.scene.custom_group
+    _custom.clear()
+    for wire_obj in range(wire_rads):
+        item = _custom.add()
+        item.name = f"Wire {wire_obj + 1}"
+        item.radius =  context.scene.twisted_wire.radius
 
-    if context.scene.twisted_wire.wires != wire_rads:
-        wire_rads = context.scene.twisted_wire.wires
-        _custom = context.scene.custom_group
-        _custom.clear()
-        for wire_obj in range(wire_rads):
-            item = _custom.add()
-            item.name = f"Wire {wire_obj}"
-            item.radius =  context.scene.twisted_wire.radius
+@persistent
+def on_load(_scene):
+    _self = None
+    update_wires(_self, bpy.context)
 
 class PropertyCollection(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty(name="", default="")
@@ -58,12 +58,11 @@ class Twisted_Wire_Settings(bpy.types.PropertyGroup):
         update=update_wires
     )
 
-
     radius : bpy.props.FloatProperty(
         name="Diameter",
         description="Radius of wire",
         default=1.0,
-        min=0.1, max=1000.0, # cam we re,pve max limit?
+        min=0.1, max=1000.0,
     )
 
     gap : bpy.props.FloatProperty(
@@ -102,7 +101,6 @@ class TwistedWire_PT(bpy.types.Panel):
     bl_idname  = 'VIEW_3D_PT_twisted_wire'
 
     def draw(self, context):
-        global wire_rads
         layout = self.layout
         _scene = context.scene.twisted_wire
         _custom = context.scene.custom_group
@@ -142,4 +140,4 @@ class TwistedWire_PT(bpy.types.Panel):
 
         for item in _custom:
             col = layout.column(align=True)
-            col.prop(item, "radius", text=f"Wire Radius {item.name}")
+            col.prop(item, "radius", text=f"Radius for {item.name}")

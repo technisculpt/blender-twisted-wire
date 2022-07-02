@@ -26,6 +26,12 @@ classes = (
     ui.PropertyCollection,
 )
 
+for handler in bpy.app.handlers.load_post:
+    print(handler.__name__)
+    if handler.__name__ == 'on_load':
+        bpy.app.handlers.load_post.remove(handler)
+
+bpy.app.handlers.load_post.append(ui.on_load)
 
 def register():
     for cls in classes:
